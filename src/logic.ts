@@ -1,30 +1,12 @@
-import { Request, Response } from "express";
-import { product } from "./database";
-import { Product } from "./interfaces";
-
-function formateData(data:Date) {
-  const dia = String(data.getDate()).padStart(2, '0');
-  const mes = String(data.getMonth() + 1).padStart(2, '0'); // Lembrando que os meses em JavaScript são base 0
-  const ano = data.getFullYear();
-  return `${dia}/${mes}/${ano}`;
-}
-
-function plus365Days(dataInicial:any) {
-    // Crie uma cópia da data inicial para não alterá-la diretamente
-    const novaData = new Date(dataInicial);
-  
-    // Adicione 365 dias à nova data
-    novaData.setDate(novaData.getDate() + 365);
-  
-    // Retorne a nova data
-    return novaData;
-  }
+import { Request, Response } from 'express';
+import { product } from './database';
+import { Product } from './interfaces';
 
 const createProduct = (request: Request, response: Response): Response => {
     const today: Date = new Date()
-    const novaData: Date = new Date(today);
+    const newDate: Date = new Date(today);
 
-    novaData.setDate(novaData.getDate() + 365);
+    newDate.setDate(newDate.getDate() + 365);
 
     const newProduct: Product = {
         id: product.length + 1,
@@ -33,7 +15,7 @@ const createProduct = (request: Request, response: Response): Response => {
         weight: request.body.weight, 
         section: request.body.section, 
         calories: request.body.calories, 
-        expirationDate: novaData,     
+        expirationDate: newDate,     
     }
 
     product.push(newProduct)
@@ -41,14 +23,14 @@ const createProduct = (request: Request, response: Response): Response => {
 }
 
 const readAllProducts = (request: Request, response: Response): Response => {
-    const productPrices:any = []
+    const productPrices:number[] = []
     product.forEach((element) => {
         productPrices.push(element.price)
     })
-    const soma = productPrices.reduce((accumulator:number, currentValue:number) => accumulator + currentValue, 0);
+    const sum = productPrices.reduce((accumulator:number, currentValue:number) => accumulator + currentValue, 0);
 
     const returnObject = {
-        total: soma,
+        total: sum,
         products: product
     }
     return response.status(200).json(returnObject)

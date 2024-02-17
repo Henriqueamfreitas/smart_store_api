@@ -1,6 +1,6 @@
-import { NextFunction, Request, Response, request } from "express"
-import { product } from "./database"
-import { Product } from "./interfaces"
+import { NextFunction, Request, Response } from 'express'
+import { product } from './database'
+import { Product } from './interfaces'
 
 const ensureProductExistsMiddleWare = (request: Request, response: Response, next: NextFunction) => {
     const id: string = request.params.id
@@ -8,7 +8,7 @@ const ensureProductExistsMiddleWare = (request: Request, response: Response, nex
 
     if(findIndexProduct === -1) {
         return response.status(404).json({
-            message: "Product not found."
+            message: 'Product not found.'
         })
     }
 
@@ -21,7 +21,7 @@ const ensureNoDuplicatesMiddleWare = (request: Request, response: Response, next
     const productWithSameName: Product|undefined = product.find(element => element.name === request.body.name)
     if(productWithSameName !== undefined){
         return response.status(409).json({
-            message: "Product already registered."
+            message: 'Product already registered.'
         })
     }
 
